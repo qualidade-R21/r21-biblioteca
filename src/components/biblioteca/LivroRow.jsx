@@ -37,11 +37,11 @@ export default function LivroRow({ livro, onAction, onDelete }) {
       </td>
       <td className="px-4 py-3 hidden lg:table-cell">
         {livro.data_emprestimo ? (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-base text-muted-foreground">
             {format(new Date(livro.data_emprestimo), "dd/MM/yyyy", { locale: ptBR })}
           </span>
         ) : (
-          <span className="text-xs text-muted-foreground">—</span>
+          <span className="text-base text-muted-foreground">—</span>
         )}
       </td>
       <td className="px-4 py-3 text-right">

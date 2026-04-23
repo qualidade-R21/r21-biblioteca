@@ -15,7 +15,7 @@ export default function LivroRow({ livro, onAction, onDelete }) {
         <p className="text-sm text-muted-foreground mt-0.5">{livro.autor}</p>
       </td>
       <td className="px-4 py-3 hidden md:table-cell">
-        <span className="text-xs text-muted-foreground">{livro.categoria}</span>
+        <span className="text-base text-muted-foreground">{livro.categoria}</span>
       </td>
       <td className="px-4 py-3">
         <Badge

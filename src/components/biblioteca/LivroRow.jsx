@@ -1,0 +1,60 @@
+import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowRightLeft } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+export default function LivroRow({ livro, onAction }) {
+  const disponivel = livro.situacao === "DISPONÍVEL";
+
+  return (
+    <tr className="border-b last:border-b-0 hover:bg-muted/40 transition-colors">
+      <td className="px-4 py-3">
+        <p className="font-medium text-sm leading-tight">{livro.titulo}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">{livro.autor}</p>
+      </td>
+      <td className="px-4 py-3 hidden md:table-cell">
+        <span className="text-xs text-muted-foreground">{livro.categoria}</span>
+      </td>
+      <td className="px-4 py-3">
+        <Badge
+          variant={disponivel ? "outline" : "default"}
+          className={disponivel
+            ? "bg-emerald-50 text-emerald-700 border-emerald-200 text-xs"
+            : "bg-primary text-primary-foreground text-xs"
+          }
+        >
+          {livro.situacao}
+        </Badge>
+      </td>
+      <td className="px-4 py-3 hidden lg:table-cell">
+        {livro.nome_responsavel ? (
+          <span className="text-sm">{livro.nome_responsavel}</span>
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        )}
+      </td>
+      <td className="px-4 py-3 hidden lg:table-cell">
+        {livro.data_emprestimo ? (
+          <span className="text-xs text-muted-foreground">
+            {format(new Date(livro.data_emprestimo), "dd/MM/yyyy", { locale: ptBR })}
+          </span>
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        )}
+      </td>
+      <td className="px-4 py-3 text-right">
+        <Button
+          variant={disponivel ? "default" : "outline"}
+          size="sm"
+          onClick={() => onAction(livro)}
+          className="text-xs h-7 px-3"
+        >
+          <ArrowRightLeft className="w-3 h-3 mr-1" />
+          {disponivel ? "Emprestar" : "Devolver"}
+        </Button>
+      </td>
+    </tr>
+  );
+}

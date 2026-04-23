@@ -1,0 +1,41 @@
+{
+  "name": "Livro",
+  "type": "object",
+  "properties": {
+    "titulo": {
+      "type": "string",
+      "description": "T\u00edtulo do livro"
+    },
+    "autor": {
+      "type": "string",
+      "description": "Autor do livro"
+    },
+    "categoria": {
+      "type": "string",
+      "description": "Categoria do livro"
+    },
+    "situacao": {
+      "type": "string",
+      "enum": [
+        "DISPON\u00cdVEL",
+        "INDISPON\u00cdVEL"
+      ],
+      "default": "DISPON\u00cdVEL",
+      "description": "Situa\u00e7\u00e3o atual do livro"
+    },
+    "nome_responsavel": {
+      "type": "string",
+      "description": "Nome de quem retirou o livro"
+    },
+    "data_emprestimo": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do empr\u00e9stimo"
+    }
+  },
+  "required": [
+    "titulo",
+    "autor",
+    "categoria"
+  ]
+}

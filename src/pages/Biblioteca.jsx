@@ -1,18 +1,24 @@
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 import Header from "@/components/biblioteca/Header";
 import StatsBar from "@/components/biblioteca/StatsBar";
 import SearchFilters from "@/components/biblioteca/SearchFilters";
 import LivroTable from "@/components/biblioteca/LivroTable";
 import EmprestimoDialog from "@/components/biblioteca/EmprestimoDialog";
+import LivroDialog from "@/components/biblioteca/LivroDialog";
+import ConfirmDeleteDialog from "@/components/biblioteca/ConfirmDeleteDialog";
 
 export default function Biblioteca() {
   const [search, setSearch] = useState("");
   const [situacao, setSituacao] = useState("all");
   const [categoria, setCategoria] = useState("all");
   const [selectedLivro, setSelectedLivro] = useState(null);
+  const [showCadastro, setShowCadastro] = useState(false);
+  const [livroParaExcluir, setLivroParaExcluir] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -26,6 +32,22 @@ export default function Biblioteca() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["livros"] });
       setSelectedLivro(null);
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.Livro.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["livros"] });
+      setShowCadastro(false);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Livro.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["livros"] });
+      setLivroParaExcluir(null);
     },
   });
 
@@ -85,8 +107,12 @@ export default function Biblioteca() {
           <p className="text-xs text-muted-foreground">
             {filteredLivros.length} livro{filteredLivros.length !== 1 ? "s" : ""} encontrado{filteredLivros.length !== 1 ? "s" : ""}
           </p>
+          <Button onClick={() => setShowCadastro(true)} size="sm">
+            <Plus className="w-4 h-4 mr-1" />
+            Novo Livro
+          </Button>
         </div>
-        <LivroTable livros={filteredLivros} onAction={handleAction} />
+        <LivroTable livros={filteredLivros} onAction={handleAction} onDelete={setLivroParaExcluir} />
       </main>
 
       <EmprestimoDialog
@@ -95,6 +121,21 @@ export default function Biblioteca() {
         onClose={() => setSelectedLivro(null)}
         onConfirm={handleConfirm}
         isLoading={updateMutation.isPending}
+      />
+
+      <LivroDialog
+        open={showCadastro}
+        onClose={() => setShowCadastro(false)}
+        onSave={(data) => createMutation.mutate(data)}
+        isLoading={createMutation.isPending}
+      />
+
+      <ConfirmDeleteDialog
+        livro={livroParaExcluir}
+        open={!!livroParaExcluir}
+        onClose={() => setLivroParaExcluir(null)}
+        onConfirm={() => deleteMutation.mutate(livroParaExcluir.id)}
+        isLoading={deleteMutation.isPending}
       />
     </div>
   );

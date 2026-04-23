@@ -1,7 +1,7 @@
 import React from "react";
 import LivroRow from "./LivroRow";
 
-export default function LivroTable({ livros, onAction }) {
+export default function LivroTable({ livros, onAction, onDelete }) {
   if (livros.length === 0) {
     return (
       <div className="bg-card border rounded-lg p-12 text-center">
@@ -26,7 +26,7 @@ export default function LivroTable({ livros, onAction }) {
           </thead>
           <tbody>
             {livros.map((livro) => (
-              <LivroRow key={livro.id} livro={livro} onAction={onAction} />
+              <LivroRow key={livro.id} livro={livro} onAction={onAction} onDelete={onDelete} />
             ))}
           </tbody>
         </table>

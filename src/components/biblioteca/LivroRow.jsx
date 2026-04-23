@@ -11,7 +11,7 @@ export default function LivroRow({ livro, onAction, onDelete }) {
   return (
     <tr className="border-b last:border-b-0 hover:bg-muted/40 transition-colors">
       <td className="px-4 py-3">
-        <p className="font-medium text-sm leading-tight">{livro.titulo}</p>
+        <p className="font-medium text-lg leading-tight">{livro.titulo}</p>
         <p className="text-sm text-muted-foreground mt-0.5">{livro.autor}</p>
       </td>
       <td className="px-4 py-3 hidden md:table-cell">

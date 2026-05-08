@@ -20,7 +20,7 @@ export default function EmprestimoDialog({ livro, open, onClose, onConfirm, isLo
     onConfirm({
       situacao: disponivel ? "INDISPONÍVEL" : "DISPONÍVEL",
       nome_responsavel: disponivel ? nome.trim().toUpperCase() : "",
-      data_emprestimo: disponivel ? format(new Date(), "yyyy-MM-dd") : "",
+      data_emprestimo: disponivel ? format(new Date(), "yyyy-MM-dd") : null,
     });
     setNome("");
   };

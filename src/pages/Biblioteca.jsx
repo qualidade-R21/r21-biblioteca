@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 
 import Header from "@/components/biblioteca/Header";
 import StatsBar from "@/components/biblioteca/StatsBar";
@@ -74,6 +74,28 @@ export default function Biblioteca() {
     setSelectedLivro(livro);
   };
 
+  const handleExport = () => {
+    const headers = ["Título", "Autor", "Categoria", "Situação", "Responsável", "Data Empréstimo"];
+    const rows = filteredLivros.map((l) => [
+      l.titulo ?? "",
+      l.autor ?? "",
+      l.categoria ?? "",
+      l.situacao ?? "",
+      l.nome_responsavel ?? "",
+      l.data_emprestimo ?? "",
+    ]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "biblioteca.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleConfirm = (data) => {
     updateMutation.mutate({ id: selectedLivro.id, data });
   };
@@ -107,10 +129,16 @@ export default function Biblioteca() {
           <p className="text-xs text-muted-foreground">
             {filteredLivros.length} livro{filteredLivros.length !== 1 ? "s" : ""} encontrado{filteredLivros.length !== 1 ? "s" : ""}
           </p>
-          <Button onClick={() => setShowCadastro(true)} size="sm">
-            <Plus className="w-4 h-4 mr-1" />
-            Novo Livro
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleExport} variant="outline" size="sm" disabled={filteredLivros.length === 0}>
+              <Download className="w-4 h-4 mr-1" />
+              Exportar
+            </Button>
+            <Button onClick={() => setShowCadastro(true)} size="sm">
+              <Plus className="w-4 h-4 mr-1" />
+              Novo Livro
+            </Button>
+          </div>
         </div>
         <LivroTable livros={filteredLivros} onAction={handleAction} onDelete={setLivroParaExcluir} />
       </main>

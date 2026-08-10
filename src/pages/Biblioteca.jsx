@@ -2,7 +2,8 @@ import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Plus, Download } from "lucide-react";
+import { Plus, Download, FileText } from "lucide-react";
+import { exportLivrosPdf } from "@/utils/exportPdf";
 
 import Header from "@/components/biblioteca/Header";
 import StatsBar from "@/components/biblioteca/StatsBar";
@@ -132,7 +133,11 @@ export default function Biblioteca() {
           <div className="flex items-center gap-2">
             <Button onClick={handleExport} variant="outline" size="sm" disabled={filteredLivros.length === 0}>
               <Download className="w-4 h-4 mr-1" />
-              Exportar
+              CSV
+            </Button>
+            <Button onClick={() => exportLivrosPdf(filteredLivros)} variant="outline" size="sm" disabled={filteredLivros.length === 0}>
+              <FileText className="w-4 h-4 mr-1" />
+              PDF
             </Button>
             <Button onClick={() => setShowCadastro(true)} size="sm">
               <Plus className="w-4 h-4 mr-1" />
